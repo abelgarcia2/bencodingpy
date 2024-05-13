@@ -6,12 +6,12 @@ def decide():
     if not char.isdigit():
         return char
     
-    number = char.decode('utf-8')
+    number = char.decode()
     while True:
         char = f.read(1)
         if char == b':':
             break
-        number += char.decode('utf-8')
+        number += char.decode()
     
     return number
         
@@ -34,7 +34,7 @@ def read_dict():
 
 def read_str(str_length: int) -> str:
     string = f.read(str_length)
-    return string.decode('utf-8') if string.isascii() else string
+    return string.decode() if string.isascii() else string
 
 def read_int() -> int:
     number = ''
@@ -42,7 +42,7 @@ def read_int() -> int:
         char = f.read(1)
         if char == END_CHAR:
             break
-        number += char.decode('utf-8')
+        number += char.decode()
     
     return int(number)
 
@@ -69,7 +69,7 @@ def read_data(char:bytes):
         return read_dict()
         
 
-with open('debian-12.5.0-amd64-netinst.iso.torrent', 'rb') as f:
+with open('archlinux-2024.05.01-x86_64.iso.torrent', 'rb') as f:
     result = read_data(f.read(1))
 
     print(result)
