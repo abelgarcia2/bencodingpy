@@ -1,5 +1,3 @@
-""" Callate docstring """
-
 def decide():
     char = f.read(1)
     if not char.isdigit():
