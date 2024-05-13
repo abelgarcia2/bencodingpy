@@ -1,3 +1,6 @@
+
+
+END_CHAR = b'e'
 def decide():
     char = f.read(1)
     if not char.isdigit():
@@ -19,7 +22,7 @@ def read_dict():
     i = 0
     while True:
         char = decide()
-        if char == b'e':
+        if char == END_CHAR:
             break
         if i%2 == 0:
             key = read_data(char)
@@ -37,7 +40,7 @@ def read_int() -> int:
     number = ''
     while True:
         char = f.read(1)
-        if char == b'e':
+        if char == END_CHAR:
             break
         number += char.decode('utf-8')
     
@@ -48,7 +51,7 @@ def read_list() -> list:
 
     while True:
         char = decide()
-        if char == b'e':
+        if char == END_CHAR:
             break
         data.append(read_data(char))
     
@@ -64,8 +67,6 @@ def read_data(char:bytes):
         return read_list()
     elif char == b'd':
         return read_dict()
-    elif char == b'e':
-        pass
         
 
 with open('debian-12.5.0-amd64-netinst.iso.torrent', 'rb') as f:
