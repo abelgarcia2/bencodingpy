@@ -89,7 +89,8 @@ def _decode_dict(data: BytesIO) -> dict:
             key = None
         else:
             key =  decoder(data)
-    
+            if not isinstance(key, str):
+                raise TypeError("Dictionary keys must be strings")
     return result_dict
 
 def decode(data: BytesIO):
