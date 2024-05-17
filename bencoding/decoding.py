@@ -1,22 +1,22 @@
 from io import BytesIO, SEEK_CUR
 
-INT_TYPE = b'i'
-LIST_TYPE = b'l'
-DICT_TYPE = b'd'
+INT_PREFIX = b'i'
+LIST_PREFIX = b'l'
+DICT_PREFIX = b'd'
 
 END_CHAR = b'e'
 
-SEPARATOR = b':'
+SEPARATOR_CHAR = b':'
 
-def _get_decoder(char: str):
+def _get_decoder(char: bytes):
     if char.isdigit():
-        return decode_str
-    elif char == INT_TYPE:
-        return decode_int
-    elif char == LIST_TYPE:
-        return decode_list
-    elif char == DICT_TYPE:
-        return decode_dict
+        return _decode_str
+    elif char == INT_PREFIX:
+        return _decode_int
+    elif char == LIST_PREFIX:
+        return _decode_list
+    elif char == DICT_PREFIX:
+        return _decode_dict
     elif char == END_CHAR:
         pass
 
@@ -32,9 +32,9 @@ def _read_to(char: str, data: BytesIO) -> bytes:
 
     return buf
 
-def decode_str(data: BytesIO) -> str:
+def _decode_str(data: BytesIO) -> str:
     data.seek(-1, SEEK_CUR)
-    str_length = int(_read_to(SEPARATOR, data))
+    str_length = int(_read_to(SEPARATOR_CHAR, data))
 
     readed_str = data.read(str_length)
 
@@ -45,7 +45,7 @@ def decode_str(data: BytesIO) -> str:
 
     return result_str
 
-def decode_int(data: BytesIO) -> int:
+def _decode_int(data: BytesIO) -> int:
     result_number = b''
     while True:
         char = data.read(1)
@@ -57,7 +57,7 @@ def decode_int(data: BytesIO) -> int:
     
     return int(result_number)
 
-def decode_list(data: BytesIO) -> list:
+def _decode_list(data: BytesIO) -> list:
     result_list = []
 
     while True:
@@ -72,11 +72,10 @@ def decode_list(data: BytesIO) -> list:
     
     return result_list
 
-def decode_dict(data: BytesIO):
+def _decode_dict(data: BytesIO) -> dict:
     result_dict = {}
 
     key = None
-    i = 0
     while True:
         readed_char = data.read(1)
 
@@ -85,12 +84,11 @@ def decode_dict(data: BytesIO):
 
         decoder = _get_decoder(readed_char)
 
-        if i%2 == 0:
-            key = decoder(data)
-        else:
+        if key:
             result_dict[key] = decoder(data)
-        
-        i += 1
+            key = None
+        else:
+            key =  decoder(data)
     
     return result_dict
 
