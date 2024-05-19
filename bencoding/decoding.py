@@ -7,7 +7,7 @@ LIST_PREFIX = b'l'
 DICT_PREFIX = b'd'
 
 END_CHAR = b'e'
-SEPARATOR_CHAR = b':'
+STRING_SEPARATOR_CHAR = b':'
 
 LEADING_ZERO_REGEX = re.compile(r'^-?0+\d+')
 
@@ -74,7 +74,7 @@ def _decode_str(data: BufferedReader) -> str|bytes:
     :rtype: str|bytes
     """
     data.seek(-1, SEEK_CUR)
-    str_length = int(_read_to(SEPARATOR_CHAR, data))
+    str_length = int(_read_to(STRING_SEPARATOR_CHAR, data))
 
     readed_str = data.read(str_length)
 
