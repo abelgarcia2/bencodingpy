@@ -2,6 +2,8 @@ from io import BufferedReader, BytesIO, SEEK_CUR
 import re
 from typing import Callable
 
+from . import BdecodingError
+
 INT_PREFIX = b'i'
 LIST_PREFIX = b'l'
 DICT_PREFIX = b'd'
@@ -10,9 +12,6 @@ END_CHAR = b'e'
 STRING_SEPARATOR_CHAR = b':'
 
 LEADING_ZERO_REGEX = re.compile(r'^-?0+\d+')
-
-class BdecodingError(Exception):
-    """Exception to be raised when an error occurs during decoding"""
 
 def _get_decoder(char: bytes) -> Callable[[BufferedReader], str|int|list|dict]:
     """
