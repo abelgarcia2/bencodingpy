@@ -94,13 +94,7 @@ def _decode_int(data: BufferedReader) -> int:
     :rtype: int
     :raises ValueError: if int has leading zeros or int is -0
     """
-    result_number = b''
-    while True:
-        char = data.read(1)
-        if char == END_CHAR:
-            break
-        result_number += char
-    
+    result_number = _read_to(END_CHAR, data)    
     result_number = result_number.decode()
     if result_number == '-0':
         raise ValueError("Integer -0 is invalid")
