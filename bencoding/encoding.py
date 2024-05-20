@@ -1,5 +1,7 @@
 from io import BytesIO
 
+from . import BdecodingError
+
 def _get_encoder(data):
     if isinstance(data, str) or isinstance(data, bytes):
         return _encode_str
@@ -11,11 +13,9 @@ def _get_encoder(data):
         return _encode_dict
 
 def _encode_str(str_data: str|bytes) -> str:
-    a = bytes(f'{len(str_data)}:', encoding='utf-8')
-    b = (bytes(str_data, encoding='utf-8') if isinstance(str_data, str) else str_data)
-
-    c = a + b
-    return bytes(f'{len(str_data)}:', encoding='utf-8') + (bytes(str_data, encoding='utf-8') if isinstance(str_data, str) else str_data)
+    if isinstance(str_data, str):
+        str_data = bytes(str_data, encoding='utf-8')
+    return bytes(f'{len(str_data)}:', encoding='utf-8') + str_data
 
 def _encode_int(int_data: int) -> str:
     return bytes(f'i{int_data}e', encoding='utf-8')
@@ -32,7 +32,14 @@ def _encode_list(list_data: list) -> str:
 def _encode_dict(dict_data: dict):
     encoded_dict = b'd'
 
+    previous_key = list(dict_data.keys())[0]
     for key, value in dict_data.items():
+        if not isinstance(key, str):
+            raise TypeError('Dictionary keys must be strings')
+        if key < previous_key:
+            raise ValueError('Dict keys must appear in sorted order')
+        previous_key = key
+
         key_encoder = _get_encoder(key)
         value_encoder = _get_encoder(value)
 
@@ -44,4 +51,7 @@ def _encode_dict(dict_data: dict):
 def encode(data):
     encoder = _get_encoder(data)
 
-    return encoder(data)
+    try:
+        return encoder(data)
+    except Exception as e:
+        raise BdecodingError(e)
