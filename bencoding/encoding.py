@@ -1,8 +1,17 @@
 from io import BytesIO
+from typing import Callable
 
 from . import BdecodingError
 
-def _get_encoder(data):
+def _get_encoder(data: str|int|list|dict) -> Callable[[str|int|list|dict], [str|int|list|dict]]:
+    """
+    Get function to encode from data type
+    :param data: item to be encoded
+    :type data: str|int|list|dict
+    :returns: function to encode next item
+    :rtype: (str|int|list|dict) -> bytes
+    :raises ValueError: if data not matches any accepted type
+    """
     if isinstance(data, str) or isinstance(data, bytes):
         return _encode_str
     elif isinstance(data, int):
@@ -11,16 +20,39 @@ def _get_encoder(data):
         return _encode_list
     elif isinstance(data, dict):
         return _encode_dict
+    else:
+        raise ValueError("Unexpected data type")
 
-def _encode_str(str_data: str|bytes) -> str:
+def _encode_str(str_data: str|bytes) -> bytes:
+    """
+    Encode a string
+    :param str_data: string to be encoded
+    :type str_data: str|bytes
+    :returns: bencoded string
+    :rtype: bytes
+    """
     if isinstance(str_data, str):
         str_data = bytes(str_data, encoding='utf-8')
     return bytes(f'{len(str_data)}:', encoding='utf-8') + str_data
 
-def _encode_int(int_data: int) -> str:
+def _encode_int(int_data: int) -> bytes:
+    """
+    Encode a int number
+    :param int_data: int to be encoded
+    :type int_data: int
+    :returns: bencoded integer
+    :rtype: bytes
+    """
     return bytes(f'i{int_data}e', encoding='utf-8')
 
-def _encode_list(list_data: list) -> str:
+def _encode_list(list_data: list) -> bytes:
+    """
+    Encode a list
+    :param list_data: list to be encoded
+    :type list_data: list
+    :returns: bencoded list
+    :rtype: bytes
+    """
     encoded_list = b'l'
 
     for item in list_data:
@@ -29,7 +61,14 @@ def _encode_list(list_data: list) -> str:
     
     return encoded_list + b'e'
 
-def _encode_dict(dict_data: dict):
+def _encode_dict(dict_data: dict) -> bytes:
+    """
+    Encode a dict
+    :param dict_data: dict to be encoded
+    :type dict_data: dict
+    :returns: bencoded dict
+    :rtype: bytes
+    """
     encoded_dict = b'd'
 
     previous_key = list(dict_data.keys())[0]
@@ -48,7 +87,14 @@ def _encode_dict(dict_data: dict):
     
     return encoded_dict + b'e'
 
-def encode(data):
+def encode(data: str|int|list|dict) -> bytes:
+    """
+    Encodes provided data
+    :param data: data to be encoded
+    :type data: str|int|list|dict
+    :returns: bencoded data
+    :rtype: bytes
+    """
     encoder = _get_encoder(data)
 
     try:
