@@ -1,6 +1,6 @@
 from unittest import TestCase
-from bencoding import BdecodingError
-from bencoding.encoding import encode
+from src.bencodingpy.exceptions import BdecodingError
+from src.bencodingpy import encode
 
 class TestString(TestCase):
     def test_word(self):

@@ -19,7 +19,7 @@ from io import BufferedReader, BytesIO, SEEK_CUR
 import re
 from typing import Callable
 
-from . import BdecodingError
+from .exceptions import BdecodingError
 
 INT_PREFIX = b'i'
 LIST_PREFIX = b'l'

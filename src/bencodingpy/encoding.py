@@ -18,7 +18,7 @@
 from io import BytesIO
 from typing import Callable
 
-from . import BdecodingError
+from .exceptions import BdecodingError
 
 def _get_encoder(data: str|int|list|dict) -> Callable[[str|int|list|dict], [str|int|list|dict]]:
     """
