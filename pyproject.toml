@@ -24,7 +24,7 @@ authors = [
   { name = "Abel García"},
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Topic :: Communications :: File Sharing",
   "Topic :: Software Development :: Libraries",
