@@ -10,7 +10,7 @@ class TestString(TestCase):
         self.assertEqual(decode('7:s p a m'), 's p a m')
 
     def test_one_char(self):
-        self.assertEqual(decode('1:a'), 'a')
+        self.assertEqual(decode('1:a'), 'b')
 
 class TestInteger(TestCase):
     def test_positive(self):
