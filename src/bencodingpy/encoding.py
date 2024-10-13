@@ -15,12 +15,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from io import BytesIO
 from typing import Callable
 
 from .exceptions import BdecodingError
 
-def _get_encoder(data: str|int|list|dict) -> Callable[[str|int|list|dict], [str|int|list|dict]]:
+
+def _get_encoder(
+    data: str | int | list | dict
+) -> Callable[[str | int | list | dict], [str | int | list | dict]]:
     """
     Get function to encode from data type
     :param data: item to be encoded
@@ -40,7 +42,8 @@ def _get_encoder(data: str|int|list|dict) -> Callable[[str|int|list|dict], [str|
     else:
         raise ValueError("Unexpected data type")
 
-def _encode_str(str_data: str|bytes) -> bytes:
+
+def _encode_str(str_data: str | bytes) -> bytes:
     """
     Encode a string
     :param str_data: string to be encoded
@@ -52,6 +55,7 @@ def _encode_str(str_data: str|bytes) -> bytes:
         str_data = bytes(str_data, encoding='utf-8')
     return bytes(f'{len(str_data)}:', encoding='utf-8') + str_data
 
+
 def _encode_int(int_data: int) -> bytes:
     """
     Encode a int number
@@ -61,6 +65,7 @@ def _encode_int(int_data: int) -> bytes:
     :rtype: bytes
     """
     return bytes(f'i{int_data}e', encoding='utf-8')
+
 
 def _encode_list(list_data: list) -> bytes:
     """
@@ -75,8 +80,9 @@ def _encode_list(list_data: list) -> bytes:
     for item in list_data:
         encoder = _get_encoder(item)
         encoded_list += encoder(item)
-    
+
     return encoded_list + b'e'
+
 
 def _encode_dict(dict_data: dict) -> bytes:
     """
@@ -101,10 +107,11 @@ def _encode_dict(dict_data: dict) -> bytes:
 
         encoded_dict += key_encoder(key)
         encoded_dict += value_encoder(value)
-    
+
     return encoded_dict + b'e'
 
-def encode(data: str|int|list|dict) -> bytes:
+
+def encode(data: str | int | list | dict) -> bytes:
     """
     Encodes provided data
     :param data: data to be encoded

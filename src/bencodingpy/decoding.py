@@ -30,7 +30,10 @@ STRING_SEPARATOR_CHAR = b':'
 
 LEADING_ZERO_REGEX = re.compile(r'^-?0+\d+')
 
-def _get_decoder(char: bytes) -> Callable[[BufferedReader], str|int|list|dict]:
+
+def _get_decoder(
+    char: bytes
+) -> Callable[[BufferedReader], str | int | list | dict]:
     """
     Guesses next item type from preceding character
     :param char: a single byte character
@@ -49,6 +52,7 @@ def _get_decoder(char: bytes) -> Callable[[BufferedReader], str|int|list|dict]:
         return _decode_dict
     else:
         raise ValueError("Unexpected char when guessing type")
+
 
 def _read_to(char: str, data: BufferedReader) -> bytes:
     """
@@ -69,7 +73,8 @@ def _read_to(char: str, data: BufferedReader) -> bytes:
 
     return buff
 
-def _convert_to_buffered_reader(data: str|bytes) -> BufferedReader:
+
+def _convert_to_buffered_reader(data: str | bytes) -> BufferedReader:
     """
     Convert data to BufferedReader
     :param data: Data to be decoding
@@ -81,7 +86,8 @@ def _convert_to_buffered_reader(data: str|bytes) -> BufferedReader:
         data = bytes(data, encoding='utf-8')
     return BufferedReader(BytesIO(data))
 
-def _decode_str(data: BufferedReader) -> str|bytes:
+
+def _decode_str(data: BufferedReader) -> str | bytes:
     """
     Reads an string or bytes from buffer
     :param data: buffer to read
@@ -101,6 +107,7 @@ def _decode_str(data: BufferedReader) -> str|bytes:
 
     return result_str
 
+
 def _decode_int(data: BufferedReader) -> int:
     """
     Reads an int from buffer
@@ -110,15 +117,16 @@ def _decode_int(data: BufferedReader) -> int:
     :rtype: int
     :raises ValueError: if int has leading zeros or int is -0
     """
-    result_number = _read_to(END_CHAR, data)    
+    result_number = _read_to(END_CHAR, data)
     result_number = result_number.decode()
     if result_number == '-0':
         raise ValueError("Integer -0 is invalid")
-    
+
     if re.match(LEADING_ZERO_REGEX, result_number):
         raise ValueError("Leading zero number is invalid")
-    
+
     return int(result_number)
+
 
 def _decode_list(data: BufferedReader) -> list:
     """
@@ -136,8 +144,9 @@ def _decode_list(data: BufferedReader) -> list:
             break
         decoder = _get_decoder(char)
         result_list.append(decoder(data))
-    
+
     return result_list
+
 
 def _decode_dict(data: BufferedReader) -> dict:
     """
@@ -161,17 +170,18 @@ def _decode_dict(data: BufferedReader) -> dict:
             result_dict[key] = decoder(data)
             key = None
         else:
-            key =  decoder(data)
+            key = decoder(data)
             if not isinstance(key, str):
                 raise TypeError("Dictionary keys must be strings")
-        
+
     result_dict_keys = list(result_dict.keys())
-    if not all(result_dict_keys[i] <= result_dict_keys[i+1] for i in range(len(result_dict_keys) -1)):
+    if not all(result_dict_keys[i] <= result_dict_keys[i+1] for i in range(len(result_dict_keys) - 1)):
         raise ValueError("Dict keys must appear in sorted order")
-    
+
     return result_dict
 
-def decode(data: BufferedReader|bytes|str) -> str|int|list|dict:
+
+def decode(data: BufferedReader | bytes | str) -> str | int | list | dict:
     """
     Decode bencoding data
     :param data: buffer, bytes or string to decode
