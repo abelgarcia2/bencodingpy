@@ -65,10 +65,7 @@ def _read_to(char: str, data: BufferedReader) -> bytes:
     :rtype: bytes
     """
     buff = b''
-    while True:
-        readed_char = data.read(1)
-        if readed_char == char:
-            break
+    while (readed_char := data.read(1)) != char:
         buff += readed_char
 
     return buff
@@ -138,10 +135,7 @@ def _decode_list(data: BufferedReader) -> list:
     """
     result_list = []
 
-    while True:
-        char = data.read(1)
-        if char == END_CHAR:
-            break
+    while (char := data.read(1)) != END_CHAR:
         decoder = _get_decoder(char)
         result_list.append(decoder(data))
 
@@ -161,10 +155,7 @@ def _decode_dict(data: BufferedReader) -> dict:
     result_dict = {}
 
     key = None
-    while True:
-        readed_char = data.read(1)
-        if readed_char == END_CHAR:
-            break
+    while (readed_char := data.read(1)) != END_CHAR:
         decoder = _get_decoder(readed_char)
         if key:
             result_dict[key] = decoder(data)
