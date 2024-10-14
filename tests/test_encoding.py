@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.bencodingpy.exceptions import BdecodingError
+from src.bencodingpy.exceptions import BdecodingEncodingError
 from src.bencodingpy import encode
 
 class TestString(TestCase):
@@ -49,9 +49,9 @@ class TestDict(TestCase):
         self.assertEqual(encode({'cow': {'spam': 'eggs'}}), b'd3:cowd4:spam4:eggsee')
 
     def test_sorted(self):
-        with self.assertRaisesRegex(BdecodingError, 'Dict keys must appear in sorted order'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Dict keys must appear in sorted order'):
             encode({'moo': 'spam', 'cow': 'eggs'})
             
     def test_no_string_keys(self):
-        with self.assertRaisesRegex(BdecodingError, 'Dictionary keys must be strings'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Dictionary keys must be strings'):
             encode({1: 'moo', 'spam': 'eggs'})

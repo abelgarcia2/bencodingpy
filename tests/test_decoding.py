@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.bencodingpy.exceptions import BdecodingError
+from src.bencodingpy.exceptions import BdecodingEncodingError
 from src.bencodingpy import decode
 
 class TestString(TestCase):
@@ -24,14 +24,14 @@ class TestInteger(TestCase):
         self.assertEqual(decode('i0e'), 0)
 
     def test_minus_zero(self):
-        with self.assertRaisesRegex(BdecodingError, 'Integer -0 is invalid'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Integer -0 is invalid'):
             decode('i-0e')
     
     def test_leading_zero(self):
-        with self.assertRaisesRegex(BdecodingError, 'Leading zero number is invalid'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Leading zero number is invalid'):
             decode('i-034e')
         
-        with self.assertRaisesRegex(BdecodingError, 'Leading zero number is invalid'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Leading zero number is invalid'):
             decode('i034e')
 
 class TestList(TestCase):
@@ -40,7 +40,7 @@ class TestList(TestCase):
 
     def test_integer(self):
         self.assertEqual(decode('li84ei65ee'), [84, 65])
-        with self.assertRaisesRegex(BdecodingError, 'Leading zero number is invalid'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Leading zero number is invalid'):
             decode('li-34ei056ee')
         
     def test_dict(self):
@@ -60,9 +60,9 @@ class TestDict(TestCase):
         self.assertEqual(decode('d3:cowd4:spam4:eggsee'), {'cow': {'spam': 'eggs'}})
     
     def test_ordered(self):
-        with self.assertRaisesRegex(BdecodingError, 'Dict keys must appear in sorted order'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Dict keys must appear in sorted order'):
             decode('d3:moo4:spam3:cow4:eggse')
     
     def test_string_keys(self):
-        with self.assertRaisesRegex(BdecodingError, 'Dictionary keys must be strings'):
+        with self.assertRaisesRegex(BdecodingEncodingError, 'Dictionary keys must be strings'):
             decode('di1e3:moo4:spam4:eggse')

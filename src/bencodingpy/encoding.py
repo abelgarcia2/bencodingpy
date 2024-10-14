@@ -17,7 +17,7 @@
 
 from typing import Callable
 
-from .exceptions import BdecodingError
+from .exceptions import BdecodingEncodingError
 
 
 def _get_encoder(
@@ -124,4 +124,4 @@ def encode(data: str | int | list | dict) -> bytes:
     try:
         return encoder(data)
     except Exception as e:
-        raise BdecodingError(e)
+        raise BdecodingEncodingError(e)

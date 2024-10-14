@@ -19,7 +19,7 @@ from io import BufferedReader, BytesIO, SEEK_CUR
 import re
 from typing import Callable
 
-from .exceptions import BdecodingError
+from .exceptions import BdecodingEncodingError
 
 INT_PREFIX = b'i'
 LIST_PREFIX = b'l'
@@ -189,4 +189,4 @@ def decode(data: BufferedReader | bytes | str) -> str | int | list | dict:
     try:
         return decoder(data)
     except Exception as e:
-        raise BdecodingError(e)
+        raise BdecodingEncodingError(e)
