@@ -155,19 +155,20 @@ def _decode_dict(data: BufferedReader) -> dict:
     result_dict = {}
 
     key = None
+    old_key = ""
     while (readed_char := data.read(1)) != END_CHAR:
         decoder = _get_decoder(readed_char)
         if key:
             result_dict[key] = decoder(data)
+            old_key = key
             key = None
         else:
             key = decoder(data)
+
             if not isinstance(key, str):
                 raise TypeError("Dictionary keys must be strings")
-
-    result_dict_keys = list(result_dict.keys())
-    if not all(result_dict_keys[i] <= result_dict_keys[i+1] for i in range(len(result_dict_keys) - 1)):
-        raise ValueError("Dict keys must appear in sorted order")
+            if not key > old_key:
+                raise ValueError("Dict keys must appear in sorted order")
 
     return result_dict
 
