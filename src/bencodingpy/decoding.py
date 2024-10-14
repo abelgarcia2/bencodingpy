@@ -158,7 +158,7 @@ def _decode_dict(data: BufferedReader) -> dict:
     old_key = ""
     while (readed_char := data.read(1)) != END_CHAR:
         decoder = _get_decoder(readed_char)
-        if key:
+        if key is not None:
             result_dict[key] = decoder(data)
             old_key = key
             key = None
