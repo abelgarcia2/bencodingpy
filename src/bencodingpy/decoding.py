@@ -182,11 +182,11 @@ def decode(data: BufferedReader | bytes | str) -> str | int | list | dict:
     :rtype: str|int|list|dict
     :raises BdecodingError: if an error occurs during decoding
     """
-    if not isinstance(data, BufferedReader):
-        data = _convert_to_buffered_reader(data)
-    first_char = data.read(1)
-    decoder = _get_decoder(first_char)
     try:
+        if not isinstance(data, BufferedReader):
+            data = _convert_to_buffered_reader(data)
+        first_char = data.read(1)
+        decoder = _get_decoder(first_char)
         return decoder(data)
     except Exception as e:
         raise BdecodingEncodingError(e)

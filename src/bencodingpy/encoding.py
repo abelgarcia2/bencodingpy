@@ -119,9 +119,8 @@ def encode(data: str | int | list | dict) -> bytes:
     :returns: bencoded data
     :rtype: bytes
     """
-    encoder = _get_encoder(data)
-
     try:
+        encoder = _get_encoder(data)
         return encoder(data)
     except Exception as e:
         raise BdecodingEncodingError(e)
